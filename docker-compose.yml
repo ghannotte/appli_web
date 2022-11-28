@@ -1,0 +1,36 @@
+version: "2"
+services:
+    www:
+        build: .
+        ports: 
+            - "8001:80"
+        #command: ["bash", "-c", "apt-get update"; "apt-get install --yes --force-yes git"; "git clone https://github.com/ghannotte/tpweb"; cp /tpweb/www/* /www:/var/www/html/ ]    
+#        volumes:
+#            - ./www:/var/www/html/
+        links:
+            - db
+        networks:
+            - default
+    db:
+        image: mysql
+        ports: 
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: myDb
+            MYSQL_USER: user
+            MYSQL_PASSWORD: test
+            MYSQL_ROOT_PASSWORD: test
+        networks:
+            - default
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links: 
+            - db:db
+        ports:
+            - 8000:80
+        environment:
+            MYSQL_USER: user
+            MYSQL_PASSWORD: test
+            MYSQL_ROOT_PASSWORD: test
+volumes:
+    persistent:
